@@ -1,6 +1,10 @@
 package com.codegym.cms.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "customers")
@@ -8,8 +12,50 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty
+    @Size(min = 2, max = 45)
     private String firstName;
+    @NotEmpty
+    @Size(min = 2, max = 45)
     private String lastName;
+    @Pattern(regexp = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$")
+    private String phoneNumber;
+    @Min(18)
+    private int age;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public Customer(@NotEmpty @Size(min = 2,max = 45) String firstName,@NotEmpty @Size(min = 2,max = 45) String lastName,@Pattern(regexp = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$") String phoneNumber,@Min(18) int age, Province province) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.age = age;
+        this.province = province;
+    }
+
+    public Customer(Long id, @NotEmpty @Size(min = 2,max = 45) String firstName,@NotEmpty @Size(min = 2,max = 45) String lastName,@Pattern(regexp = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$") String phoneNumber,@Min(18) int age, Province province) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.age = age;
+        this.province = province;
+    }
+
+    public void setPhoneNumber(@Pattern(regexp = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$") String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(@Min(18) int age) {
+        this.age = age;
+    }
+
     @ManyToOne
     @JoinColumn(name = "province_id")
     private Province province;
@@ -46,7 +92,7 @@ public class Customer {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(@NotEmpty @Size(min = 2,max = 45) String firstName) {
         this.firstName = firstName;
     }
 
@@ -54,7 +100,7 @@ public class Customer {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(@NotEmpty @Size(min = 2,max = 45) String lastName) {
         this.lastName = lastName;
     }
 

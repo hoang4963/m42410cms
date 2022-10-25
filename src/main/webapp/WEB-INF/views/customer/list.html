@@ -17,6 +17,8 @@
     <tr>
         <th>First name</th>
         <th>Last name</th>
+        <th>Age</th>
+        <th>Phone Number</th>
         <th>Province</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -25,6 +27,8 @@
         <tr>
             <td th:text="${customer.firstName}"></td>
             <td th:text="${customer.lastName}"></td>
+            <td th:text="${customer.age}"></td>
+            <td th:text="${customer.phoneNumber}"></td>
             <td th:if="${customer.province}" th:text="${customer.province.name}"></td>
             <td th:unless="${customer.province}"></td>
             <td><a th:href="@{/edit-customer/__${customer.id}__ }">Edit</a></td>

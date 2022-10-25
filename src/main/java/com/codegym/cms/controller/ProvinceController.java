@@ -60,7 +60,7 @@ public class ProvinceController {
     @PostMapping("/edit-province")
     public ModelAndView updateProvince(@ModelAttribute("province") Province province) {
         provinceService.save(province);
-        ModelAndView modelAndView = new ModelAndView("/province/edit");
+        ModelAndView modelAndView = new ModelAndView("/province/list");
         modelAndView.addObject("province", province);
         modelAndView.addObject("message", "Province updated successfully");
         return modelAndView;

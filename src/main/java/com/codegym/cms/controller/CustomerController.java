@@ -8,19 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
 public class CustomerController {
-
+    @Autowired
+    private IProvinceService provinceService;
     @Autowired
     private ICustomerService customerService;
 
-    @Autowired
-    private IProvinceService provinceService;
+
 
     @ModelAttribute("provinces")
     public Iterable<Province> provinces(){
@@ -36,7 +38,13 @@ public class CustomerController {
     }
 
     @PostMapping("/create-customer")
-    public ModelAndView saveCustomer(@ModelAttribute("customer") Customer customer) {
+    public ModelAndView saveCustomer(@Valid @ModelAttribute("customer") Customer customer, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            ModelAndView modelAndView = new ModelAndView("/customer/create");
+            modelAndView.addObject("message", "Error");
+            modelAndView.addObject("customer", new Customer());
+            return modelAndView;
+        }
         customerService.save(customer);
         ModelAndView modelAndView = new ModelAndView("/customer/create");
         modelAndView.addObject("customer", new Customer());
@@ -72,9 +80,15 @@ public class CustomerController {
     }
 
     @PostMapping("/edit-customer")
-    public ModelAndView updateCustomer(@ModelAttribute("customer") Customer customer) {
+    public ModelAndView updateCustomer(@Valid @ModelAttribute("customer") Customer customer, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            ModelAndView modelAndView = new ModelAndView("/customer/edit");
+            modelAndView.addObject("message", "Error");
+            modelAndView.addObject("customer", customer);
+            return modelAndView;
+        }
         customerService.save(customer);
-        ModelAndView modelAndView = new ModelAndView("/customer/edit");
+        ModelAndView modelAndView = new ModelAndView("/customer/list");
         modelAndView.addObject("customer", customer);
         modelAndView.addObject("message", "Customer updated successfully");
         return modelAndView;
