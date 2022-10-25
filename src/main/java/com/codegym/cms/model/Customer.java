@@ -23,6 +23,27 @@ public class Customer {
     @Min(18)
     private int age;
 
+    @Column(unique = true)
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Customer(Long id, String firstName, String lastName, String phoneNumber, int age, String email, Province province) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.age = age;
+        this.email = email;
+        this.province = province;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }

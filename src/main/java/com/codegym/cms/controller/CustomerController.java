@@ -1,5 +1,6 @@
 package com.codegym.cms.controller;
 
+import com.codegym.cms.exception.DuplicateEmailException;
 import com.codegym.cms.model.Customer;
 import com.codegym.cms.model.Province;
 import com.codegym.cms.service.customer.ICustomerService;
@@ -38,7 +39,7 @@ public class CustomerController {
     }
 
     @PostMapping("/create-customer")
-    public ModelAndView saveCustomer(@Valid @ModelAttribute("customer") Customer customer, BindingResult bindingResult) {
+    public ModelAndView saveCustomer(@Valid @ModelAttribute("customer") Customer customer, BindingResult bindingResult) throws DuplicateEmailException {
         if (bindingResult.hasErrors()){
             ModelAndView modelAndView = new ModelAndView("/customer/create");
             modelAndView.addObject("message", "Error");
@@ -87,11 +88,16 @@ public class CustomerController {
             modelAndView.addObject("customer", customer);
             return modelAndView;
         }
-        customerService.save(customer);
-        ModelAndView modelAndView = new ModelAndView("/customer/list");
-        modelAndView.addObject("customer", customer);
-        modelAndView.addObject("message", "Customer updated successfully");
-        return modelAndView;
+        try{
+            customerService.save(customer);
+            ModelAndView modelAndView = new ModelAndView("/customer/list");
+            modelAndView.addObject("customer", customer);
+            modelAndView.addObject("message", "Customer updated successfully");
+            return modelAndView;
+        } catch (DuplicateEmailException e){
+            return new ModelAndView("/customers/inputs-not-acceptable");
+        }
+
     }
 
     @GetMapping("/delete-customer/{id}")

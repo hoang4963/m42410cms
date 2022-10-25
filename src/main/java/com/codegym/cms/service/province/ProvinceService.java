@@ -1,5 +1,6 @@
 package com.codegym.cms.service.province;
 
+import com.codegym.cms.model.Customer;
 import com.codegym.cms.model.Province;
 import com.codegym.cms.repository.IProvinceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,9 @@ public class ProvinceService implements IProvinceService {
     }
 
     @Override
-    public void save(Province province) {
+    public Customer save(Province province) {
         provinceRepository.save(province);
+        return null;
     }
 
     @Override

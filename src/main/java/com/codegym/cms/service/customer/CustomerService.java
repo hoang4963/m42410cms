@@ -1,8 +1,10 @@
 package com.codegym.cms.service.customer;
 
+import com.codegym.cms.exception.DuplicateEmailException;
 import com.codegym.cms.model.Customer;
 import com.codegym.cms.repository.ICustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,8 +35,12 @@ public class CustomerService implements ICustomerService{
     }
 
     @Override
-    public void save(Customer customer) {
-        customerRepository.save(customer);
+    public Customer save(Customer customer) throws DuplicateEmailException {
+        try {
+            return customerRepository.save(customer);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateEmailException();
+        }
     }
 
     @Override
