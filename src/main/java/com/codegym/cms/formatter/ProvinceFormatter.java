@@ -22,7 +22,12 @@ public class ProvinceFormatter implements Formatter<Province> {
 
     @Override
     public Province parse(String text, Locale locale) throws ParseException {
-        Optional<Province> provinceOptional = provinceService.findById(Long.parseLong(text));
+        Optional<Province> provinceOptional = null;
+        try {
+            provinceOptional = provinceService.findById(Long.parseLong(text));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return provinceOptional.orElse(null);
     }
 

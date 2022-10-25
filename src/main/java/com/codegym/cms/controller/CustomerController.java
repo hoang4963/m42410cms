@@ -53,7 +53,7 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public ModelAndView listCustomers(@RequestParam("search") Optional<String> search, Pageable pageable){
+    public ModelAndView listCustomers(@RequestParam("search") Optional<String> search, Pageable pageable) throws Exception {
         Page<Customer> customers;
         if(search.isPresent()){
             customers = customerService.findAllByFirstNameContaining(search.get(), pageable);
@@ -67,7 +67,7 @@ public class CustomerController {
 
 
     @GetMapping("/edit-customer/{id}")
-    public ModelAndView showEditForm(@PathVariable Long id) {
+    public ModelAndView showEditForm(@PathVariable Long id) throws Exception {
         Optional<Customer> customer = customerService.findById(id);
         if (customer.isPresent()) {
             ModelAndView modelAndView = new ModelAndView("/customer/edit");
@@ -95,16 +95,14 @@ public class CustomerController {
     }
 
     @GetMapping("/delete-customer/{id}")
-    public ModelAndView showDeleteForm(@PathVariable Long id) {
-        Optional<Customer> customer = customerService.findById(id);
-        if (customer.isPresent()) {
-            ModelAndView modelAndView = new ModelAndView("/customer/delete");
-            modelAndView.addObject("customer", customer.get());
+    public ModelAndView showDeleteForm(@PathVariable Long id) throws Exception {
+        try {
+            ModelAndView modelAndView = new ModelAndView("/customers/info");
+            Optional<Customer> customerOptional = customerService.findById(id);
+            modelAndView.addObject("customer", customerOptional.get());
             return modelAndView;
-
-        } else {
-            ModelAndView modelAndView = new ModelAndView("/error.404");
-            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView("redirect:/customers");
         }
     }
 
